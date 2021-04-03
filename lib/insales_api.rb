@@ -19,7 +19,9 @@ module InsalesApi
     autoload :Account
     autoload :ApplicationCharge
     autoload :ApplicationWidget
+    autoload :Article
     autoload :Asset
+    autoload :Blog
     autoload :Category
     autoload :Client
     autoload :ClientGroup
