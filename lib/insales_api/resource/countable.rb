@@ -4,6 +4,7 @@ module InsalesApi
       def count(options = {})
         puts count
         puts options
+        get(:count, options)
         get(:count, options).to_i
       end
     end
