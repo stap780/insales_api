@@ -27,6 +27,7 @@ module InsalesApi
     autoload :ClientGroup
     autoload :Collect
     autoload :Collection
+    autoload :Contractor
     autoload :Currency
     autoload :CustomStatus
     autoload :DeliveryVariant
@@ -44,6 +45,7 @@ module InsalesApi
     autoload :OrderLine
     autoload :Page
     autoload :PaymentGateway
+    autoload :PickUpSource
     autoload :PriceKind
     autoload :Product
     autoload :ProductField
@@ -56,10 +58,11 @@ module InsalesApi
     autoload :User
     autoload :Variant
     autoload :Webhook
+    autoload :Warehouse
   end
 
   class << self
-    # Calls the supplied block. If the block raises <tt>ActiveResource::ServerError</tt> with 503
+    # Calls the supplied block. If the block raises <tt>ActiveResource::ServerError</tt> with 429
     # code which means Insales API request limit is reached, it will wait for the amount of seconds
     # specified in 'Retry-After' response header. The called block will receive a parameter with
     # current attempt number.
@@ -82,15 +85,16 @@ module InsalesApi
     #     puts "Attempt ##{x}."
     #     products = InsalesApi::Products.all
     #   end
-    def wait_retry(max_attempts = nil, callback = nil, &block)
+    def wait_retry(max_attempts = nil, callback = nil, &block) # rubocop:disable Lint/UnusedMethodArgument
       attempts = 0
 
       begin
         attempts += 1
         yield attempts
       rescue ActiveResource::ServerError => ex
-        raise ex if '503' != ex.response.code.to_s
+        raise ex unless %w[429 503].include?(ex.response.code.to_s)
         raise ex if max_attempts && attempts >= max_attempts
+
         retry_after = (ex.response['Retry-After'] || 150).to_i
         callback.call(retry_after, attempts, max_attempts, ex) if callback
         sleep(retry_after)
@@ -98,7 +102,6 @@ module InsalesApi
       end
     end
   end
-
 end
 
 require 'insales_api/helpers/init_api'
