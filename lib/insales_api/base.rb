@@ -16,7 +16,7 @@ module InsalesApi
       ActiveResource/#{ActiveResource::VERSION::STRING}
       Ruby/#{RUBY_VERSION}
     ].join(' ')
-    self.format = :xml
+    self.format = :json
     self.prefix = '/admin/'
 
     class << self
