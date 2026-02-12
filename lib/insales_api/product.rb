@@ -19,7 +19,8 @@ module InsalesApi
       #     },
       #   ]
       def variants_group_update(variants)
-        put(:variants_group_update, {}, format.encode(variants, root: :variants))
+        # put(:variants_group_update, {}, format.encode(variants, root: :variants))
+        put(:variants_group_update, {}, format.encode(variants: variants))
       end
     end
     
