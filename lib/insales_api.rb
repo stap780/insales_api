@@ -92,7 +92,7 @@ module InsalesApi
         attempts += 1
         yield attempts
       rescue ActiveResource::ServerError => ex
-        raise ex unless %w[429 503].include?(ex.response.code.to_s)
+        raise ex unless %w[429 502 503].include?(ex.response.code.to_s)
         raise ex if max_attempts && attempts >= max_attempts
 
         retry_after = (ex.response['Retry-After'] || 150).to_i
